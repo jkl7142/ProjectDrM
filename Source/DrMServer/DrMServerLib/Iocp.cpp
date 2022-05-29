@@ -1,6 +1,7 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "Iocp.h"
 #include "Socket.h"
+#include "Exception.h"
 
 Iocp::Iocp(int threadCnt) {
 	m_hIocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, threadCnt);
@@ -11,10 +12,10 @@ Iocp::~Iocp() {
 	CloseHandle(m_hIocp);
 }
 
-// IOCPø° socket √ﬂ∞°
+// IOCPÏóê socket Ï∂îÍ∞Ä
 void Iocp::Add(Socket& socket, void* userPtr) {
 	if (!CreateIoCompletionPort((HANDLE)socket.m_socket, m_hIocp, (ULONG_PTR)userPtr, m_threadCnt))
-		// throw Exception("IOCP add failed!"); TODO : Exception ≈¨∑°Ω∫
+		 throw Exception("IOCP add failed!");
 }
 
 void Iocp::Wait(IocpEvents& output, int timeoutMs) {

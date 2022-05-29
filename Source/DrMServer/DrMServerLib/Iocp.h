@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class Socket;
 class IocpEvents;
@@ -12,17 +12,17 @@ public:
 	void Add(Socket& socket, void* userPtr);
 	void Wait(IocpEvents& output, int timeoutMs);
 
-	// GetQueuedCompletionStatusEx 1¹ø È£Ãâ ½Ã ÃÖ´ëÇÑ °¡Á®¿Ã ¼ö ÀÖ´Â ÀÛ¾÷ÀÇ °³¼ö
+	// GetQueuedCompletionStatusEx 1ë²ˆ í˜¸ì¶œ ì‹œ ìµœëŒ€í•œ ê°€ì ¸ì˜¬ ìˆ˜ ìˆëŠ” ì‘ì—…ì˜ ê°œìˆ˜
 	static const int MaxEventCnt = 1000;
 
 private:
 	HANDLE m_hIocp;
-	int m_threadCnt;	// IOCP »ı¼º ½Ã, ¼ÒÄÏ Ãß°¡ ½Ã °è¼Ó »ç¿ëµÇ´Â °ª
+	int m_threadCnt;	// IOCP ìƒì„± ì‹œ, ì†Œì¼“ ì¶”ê°€ ì‹œ ê³„ì† ì‚¬ìš©ë˜ëŠ” ê°’
 };
 
 class IocpEvents {
 public:
-	// GetQueuedCompletionStatusEx()·Î Å¥¿¡¼­ °¡Á®¿Â ÀÌº¥Æ®
+	// GetQueuedCompletionStatusEx()ë¡œ íì—ì„œ ê°€ì ¸ì˜¨ ì´ë²¤íŠ¸
 	OVERLAPPED_ENTRY m_events[Iocp::MaxEventCnt];
 	int m_eventCnt;
 };
