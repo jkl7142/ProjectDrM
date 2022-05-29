@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <WinSock2.h>
 #include <windows.h>
@@ -15,49 +15,50 @@ class Socket {
 public:
 
 	Socket();
-	Socket(int socket);
+	Socket(SOCKET socket);
 	Socket(SocketType socketType);
 	~Socket();
 
 	// Socket API
 	void Init();
-	void Bind();
-	void Connect();
-	void Listen();
-	int Accept(Socket& acceptedSocket, std::string& error);
+	void Bind(const Endpoint& endpoint);
+	void Connect(const Endpoint& endpoint);
 	int Send(const char* data, int length);
+	void Listen();
+
+	int Accept(Socket& acceptedSocket, std::string& error);
+	bool AcceptOverlapped(Socket& acceptCandidateSocket, std::string& error);
 	int Receive();
+	int ReceiveOverlapped();
 	void Close();
 
-	// Socket Overlapped I/O
-	bool AcceptOverlapped(Socket& acceptCandidateSocket, std::string& error);
 	int UpdateAcceptContext(Socket& listenSocket);
-	int ReceiveOverlapped();
+	Endpoint GetPeerAddr();
+	void SetNonblocking();
 
-	// GetPeerAddr();
-	// void SetNonbloking();
+	// socket handle
+	SOCKET m_socket;
 
 protected:
 	static const int MaxReceiveLength = 8192;
 
-	// socket handle
-	int m_socket;
-
-	// AcceptEx ÇÔ¼ö Æ÷ÀÎÅÍ
+	// AcceptEx í•¨ìˆ˜ í¬ì¸í„°
 	LPFN_ACCEPTEX AcceptEx = NULL;
 
-	// Overlapped I/O³ª IOCP °¡´É º¯¼ö
+	// Overlapped I/Oë‚˜ IOCP ê°€ëŠ¥ ë³€ìˆ˜
 	bool m_isReadOverlapped = false;
 
-	// Overlapped Recv or Accept ½Ã »ç¿ëµÇ´Â overlapped °´Ã¼
+	// Overlapped Recv or Accept ì‹œ ì‚¬ìš©ë˜ëŠ” overlapped ê°ì²´
 	WSAOVERLAPPED m_readOverlappedStruct;
 
-	// ¼ö½Å ¹öÆÛ
+	// ìˆ˜ì‹  ë²„í¼
 	char m_receiveBuffer[MaxReceiveLength];
 
-	// overlapped ¼ö½Å ÇÃ·¡±×
+	// overlapped ìˆ˜ì‹  í”Œë˜ê·¸
 	DWORD m_readFlags = 0;
 };
+
+std::string GetLastErrorAsString();
 
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "mswsock.lib")
